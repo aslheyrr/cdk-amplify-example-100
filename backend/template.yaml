@@ -1,0 +1,483 @@
+Description: '{"createdOn":"Mac","createdBy":"AmplifyCDK","createdWith":"1.5.4","stackType":"api-AppSync","metadata":{"dataSources":"dynamodb"}}'
+Metadata:
+  AWS::Amplify::GraphQL:
+    version: "1"
+    stackOutputs:
+      - awsAppsyncApiId
+      - awsAppsyncApiEndpoint
+      - awsAppsyncAuthenticationType
+      - awsAppsyncRegion
+      - amplifyApiModelSchemaS3Uri
+      - awsAppsyncApiKey
+Resources:
+  MyNewApiGraphQLAPI66D3D7A6:
+    Type: AWS::AppSync::GraphQLApi
+    Properties:
+      AuthenticationType: API_KEY
+      Name: MyNewApi
+    Metadata:
+      aws:cdk:path: BackendStack/MyNewApi/GraphQLAPI/Resource
+  MyNewApiGraphQLAPITransformerSchemaD37A9D4D:
+    Type: AWS::AppSync::GraphQLSchema
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - MyNewApiGraphQLAPI66D3D7A6
+          - ApiId
+      DefinitionS3Location:
+        Fn::Sub: s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/1df429c10504f9bbf8564e8a715337f38366dd8a67f92a57dfdcbdc6636065d6.graphql
+    Metadata:
+      aws:cdk:path: BackendStack/MyNewApi/GraphQLAPI/TransformerSchema
+  MyNewApiGraphQLAPIDefaultApiKey4E571592:
+    Type: AWS::AppSync::ApiKey
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - MyNewApiGraphQLAPI66D3D7A6
+          - ApiId
+      Expires: 1709258866
+    Metadata:
+      aws:cdk:path: BackendStack/MyNewApi/GraphQLAPI/DefaultApiKey
+  MyNewApiGraphQLAPINONEDSE00B0D6C:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId:
+        Fn::GetAtt:
+          - MyNewApiGraphQLAPI66D3D7A6
+          - ApiId
+      Description: None Data Source for Pipeline functions
+      Name: NONE_DS
+      Type: NONE
+    Metadata:
+      aws:cdk:path: BackendStack/MyNewApi/GraphQLAPI/NONE_DS/Resource
+  MyNewApiBlogNestedStackBlogNestedStackResource59B98D45:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        DynamoDBModelTableReadIOPS:
+          Ref: DynamoDBModelTableReadIOPS
+        DynamoDBModelTableWriteIOPS:
+          Ref: DynamoDBModelTableWriteIOPS
+        DynamoDBBillingMode:
+          Ref: DynamoDBBillingMode
+        DynamoDBEnablePointInTimeRecovery:
+          Ref: DynamoDBEnablePointInTimeRecovery
+        DynamoDBEnableServerSideEncryption:
+          Ref: DynamoDBEnableServerSideEncryption
+        referencetoBackendStackMyNewApiGraphQLAPI5B973269ApiId:
+          Fn::GetAtt:
+            - MyNewApiGraphQLAPI66D3D7A6
+            - ApiId
+        referencetoBackendStackMyNewApiGraphQLAPINONEDS83E4EBC0Name:
+          Fn::GetAtt:
+            - MyNewApiGraphQLAPINONEDSE00B0D6C
+            - Name
+      TemplateURL:
+        Fn::Join:
+          - ""
+          - - https://s3.
+            - Ref: AWS::Region
+            - "."
+            - Ref: AWS::URLSuffix
+            - /
+            - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+            - /89ae56d14bb340951bf13e809ff895c543a7433c9fd579fabfda7fda4948b92d.json
+    DependsOn:
+      - MyNewApiGraphQLAPITransformerSchemaD37A9D4D
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: BackendStack/MyNewApi/Blog.NestedStack/Blog.NestedStackResource
+      aws:asset:path: BackendStackMyNewApiBlogC371F77E.nested.template.json
+      aws:asset:property: TemplateURL
+  MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsBucket497BA282:
+    Type: AWS::S3::Bucket
+    Properties:
+      Tags:
+        - Key: aws-cdk:auto-delete-objects
+          Value: "true"
+        - Key: aws-cdk:cr-owned:231fa605
+          Value: "true"
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: BackendStack/MyNewApi/AmplifyCodegenAssets/AmplifyCodegenAssetsBucket/Resource
+  MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsBucketPolicyFBDA5FEF:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsBucket497BA282
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:DeleteObject*
+              - s3:GetBucket*
+              - s3:List*
+              - s3:PutBucketPolicy
+            Effect: Allow
+            Principal:
+              AWS:
+                Fn::GetAtt:
+                  - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+                  - Arn
+            Resource:
+              - Fn::GetAtt:
+                  - MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsBucket497BA282
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsBucket497BA282
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: BackendStack/MyNewApi/AmplifyCodegenAssets/AmplifyCodegenAssetsBucket/Policy/Resource
+  MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsBucketAutoDeleteObjectsCustomResource140AF19E:
+    Type: Custom::S3AutoDeleteObjects
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F
+          - Arn
+      BucketName:
+        Ref: MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsBucket497BA282
+    DependsOn:
+      - MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsBucketPolicyFBDA5FEF
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: BackendStack/MyNewApi/AmplifyCodegenAssets/AmplifyCodegenAssetsBucket/AutoDeleteObjectsCustomResource/Default
+  MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsDeploymentAwsCliLayer6C6D0489:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      Content:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: 3322b7049fb0ed2b7cbb644a2ada8d1116ff80c32dca89e6ada846b5de26f961.zip
+      Description: /opt/awscli/aws
+    Metadata:
+      aws:cdk:path: BackendStack/MyNewApi/AmplifyCodegenAssets/AmplifyCodegenAssetsDeployment/AwsCliLayer/Resource
+      aws:asset:path: asset.3322b7049fb0ed2b7cbb644a2ada8d1116ff80c32dca89e6ada846b5de26f961.zip
+      aws:asset:is-bundled: false
+      aws:asset:property: Content
+  MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsDeploymentCustomResource1536MiB5DAA9A23:
+    Type: Custom::CDKBucketDeployment
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBC5D8AB21
+          - Arn
+      SourceBucketNames:
+        - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+      SourceObjectKeys:
+        - 27b377da5501809f7d02e081a11775bcb7ee189279403e7f5ec42bde915abc57.zip
+      SourceMarkers:
+        - {}
+      DestinationBucketName:
+        Ref: MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsBucket497BA282
+      Prune: true
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: BackendStack/MyNewApi/AmplifyCodegenAssets/AmplifyCodegenAssetsDeployment/CustomResource-1536MiB/Default
+  CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+      ManagedPolicyArns:
+        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: BackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role
+  CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: b7f33614a69548d6bafe224d751a7ef238cde19097415e553fe8b63a4c8fd8a6.zip
+      Timeout: 900
+      MemorySize: 128
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+          - Arn
+      Runtime: nodejs18.x
+      Description:
+        Fn::Join:
+          - ""
+          - - "Lambda function for auto-deleting objects in "
+            - Ref: MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsBucket497BA282
+            - " S3 bucket."
+    DependsOn:
+      - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+    Metadata:
+      aws:cdk:path: BackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler
+      aws:asset:path: asset.b7f33614a69548d6bafe224d751a7ef238cde19097415e553fe8b63a4c8fd8a6
+      aws:asset:property: Code
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleA41FC8C2:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: BackendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiB/ServiceRole/Resource
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleDefaultPolicyFF1C635B:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetBucket*
+              - s3:GetObject*
+              - s3:List*
+            Effect: Allow
+            Resource:
+              - Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":s3:::"
+                    - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+                    - /*
+              - Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":s3:::"
+                    - Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+          - Action:
+              - s3:Abort*
+              - s3:DeleteObject*
+              - s3:GetBucket*
+              - s3:GetObject*
+              - s3:List*
+              - s3:PutObject
+              - s3:PutObjectLegalHold
+              - s3:PutObjectRetention
+              - s3:PutObjectTagging
+              - s3:PutObjectVersionTagging
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsBucket497BA282
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsBucket497BA282
+                        - Arn
+                    - /*
+        Version: "2012-10-17"
+      PolicyName: CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleDefaultPolicyFF1C635B
+      Roles:
+        - Ref: CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleA41FC8C2
+    Metadata:
+      aws:cdk:path: BackendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiB/ServiceRole/DefaultPolicy/Resource
+  CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBC5D8AB21:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::Sub: cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}
+        S3Key: e976a796f036a5efbf44b99e44cfb5a961df08d8dbf7cd37e60bf216fb982a00.zip
+      Environment:
+        Variables:
+          AWS_CA_BUNDLE: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+      Handler: index.handler
+      Layers:
+        - Ref: MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsDeploymentAwsCliLayer6C6D0489
+      MemorySize: 1536
+      Role:
+        Fn::GetAtt:
+          - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleA41FC8C2
+          - Arn
+      Runtime: python3.9
+      Timeout: 900
+    DependsOn:
+      - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleDefaultPolicyFF1C635B
+      - CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiBServiceRoleA41FC8C2
+    Metadata:
+      aws:cdk:path: BackendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C1536MiB/Resource
+      aws:asset:path: asset.e976a796f036a5efbf44b99e44cfb5a961df08d8dbf7cd37e60bf216fb982a00
+      aws:asset:is-bundled: false
+      aws:asset:property: Code
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAA/1VQXW/CIBT9Lb4j0+4X1JrtYWZzNtlrc6XXepUCA2rTNP3vC2CqezofwLmHm/F1lvHVAnq3FPV1KenIx9KDuDLoXTWCMW5Qgo/vFsz5V+aGNuCQFScVne9dbuhJleKMLQQjN/SBA/vUCrfgodSdFfHdQ03MvVYjOIfe8TwAq9FIPbSoPN904op+OxvhNh+TGzskGiLvLMFeSxLDw056YhLaYw18LE5qBwPaH7SOtGIlqUai1+qtU8IHZybFaTYnRtDy8aBl/ETEx6T7jInFX5QeGlJNOEirLDrndXtANy9h5qlVJUOjCnonJPG8d4WkWDKGg4UWfRD/cvZW36hGG5fxHP7VedPFxRRa1ZTqK10jv7iXW7bi6zVfLS6OaGk75alFfkj4BwTUmCcPAgAA
+    Metadata:
+      aws:cdk:path: BackendStack/CDKMetadata/Default
+    Condition: CDKMetadataAvailable
+Parameters:
+  DynamoDBModelTableReadIOPS:
+    Type: Number
+    Default: 5
+    Description: The number of read IOPS the table should support.
+  DynamoDBModelTableWriteIOPS:
+    Type: Number
+    Default: 5
+    Description: The number of write IOPS the table should support.
+  DynamoDBBillingMode:
+    Type: String
+    Default: PAY_PER_REQUEST
+    AllowedValues:
+      - PAY_PER_REQUEST
+      - PROVISIONED
+    Description: Configure @model types to create DynamoDB tables with PAY_PER_REQUEST or PROVISIONED billing modes.
+  DynamoDBEnablePointInTimeRecovery:
+    Type: String
+    Default: "false"
+    AllowedValues:
+      - "true"
+      - "false"
+    Description: Whether to enable Point in Time Recovery on the table.
+  DynamoDBEnableServerSideEncryption:
+    Type: String
+    Default: "true"
+    AllowedValues:
+      - "true"
+      - "false"
+    Description: Enable server side encryption powered by KMS.
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+Outputs:
+  awsAppsyncApiId:
+    Value:
+      Fn::GetAtt:
+        - MyNewApiGraphQLAPI66D3D7A6
+        - ApiId
+  awsAppsyncApiEndpoint:
+    Value:
+      Fn::GetAtt:
+        - MyNewApiGraphQLAPI66D3D7A6
+        - GraphQLUrl
+  awsAppsyncAuthenticationType:
+    Value: API_KEY
+  awsAppsyncRegion:
+    Value:
+      Ref: AWS::Region
+  amplifyApiModelSchemaS3Uri:
+    Value:
+      Fn::Join:
+        - ""
+        - - s3://
+          - Ref: MyNewApiAmplifyCodegenAssetsAmplifyCodegenAssetsBucket497BA282
+          - /model-schema.graphql
+  awsAppsyncApiKey:
+    Value:
+      Fn::GetAtt:
+        - MyNewApiGraphQLAPIDefaultApiKey4E571592
+        - ApiKey
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - af-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - il-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+Rules:
+  CheckBootstrapVersion:
+    Assertions:
+      - Assert:
+          Fn::Not:
+            - Fn::Contains:
+                - - "1"
+                  - "2"
+                  - "3"
+                  - "4"
+                  - "5"
+                - Ref: BootstrapVersion
+        AssertDescription: CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.
+

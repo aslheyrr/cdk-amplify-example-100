@@ -1,0 +1,17 @@
+type Blog @model @auth(rules: [
+  { allow: public, operations: [read] },
+  { allow: owner }
+  ]) {
+  title: String
+  content: String
+  authors: [String]
+}
+
+
+type Mutation {
+  broadcastLiveMessage(message: String): String
+}
+
+type Subscription {
+  subscriveToLiveMessages: String @aws_subscribe(mutations: [ "broadcastLiveMessage"])
+}
